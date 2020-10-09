@@ -1,7 +1,7 @@
 const express = require('express')
 const asyncHandler = require('express-async-handler')
 
-const { User } = require('../../db/models');
+const { User, Post } = require('../../db/models');
 const { authenticated, createToken } = require('../../authToken');
 
 const router = express.Router()
@@ -72,6 +72,19 @@ router.post('/unfollow/:userFollowedId',
             return next(e)
         }
         res.json({ message: `${user.id} unfollowed ${userFollowedId}` })
+    })
+)
+
+router.get('/:id/posts',
+    authenticated,
+    asyncHandler(async (req, res) => {
+        const offset = req.params.offset ? req.params.offset : 0;
+        const userId = Number(req.params.id)
+        const posts = await Post.query().where('user_id', userId)
+            .orderBy('posts.id', "DESC")
+            .offset(offset)
+            .limit(50)
+        res.json(posts)
     })
 )
 
