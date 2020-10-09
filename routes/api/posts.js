@@ -70,7 +70,7 @@ router.post('/:id/reblog',
             mediaUrl: post.mediaUrl
         })
         await reblog.$relatedQuery('rebloggedPost').relate(post)
-        res.json({'message': 'Post successful'})
+        res.json({ 'message': 'Post successful' })
     })
 )
 
@@ -107,6 +107,38 @@ router.get('/search',
             .limit(50)
 
         res.json(posts)
+    })
+)
+
+router.post('/:id/like',
+    authenticated,
+    asyncHandler(async (req, res, next) => {
+        const {id} = req.params
+
+        try {
+            await req.user.$relatedQuery('likes').relate().findById(id)            
+        } catch (e) {
+            if (e.name === 'UniqueViolationError') {
+                err = Error('Like already exists')
+                err.status = 305
+                return next(err)
+            }
+        }
+
+        res.json({message: `${req.user.id} likes ${id}`})
+    })
+)
+
+router.post('/:id/unlike',
+    authenticated,
+    asyncHandler(async (req, res, next) => {
+        try {
+            await req.user.$relatedQuery('likes').unrelate().findById(req.params.id)
+        } catch(e) {
+            return next(e)
+        }
+
+        res.json({message: `${req.user.id} unliked ${req.params.id}`})
     })
 )
 

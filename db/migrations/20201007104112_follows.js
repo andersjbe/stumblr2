@@ -9,7 +9,7 @@ exports.up = function (knex) {
         follows.integer('user_followed_id')
             .notNullable()
             .references('users.id')
-        follows.unique('user_following_id', 'user_followed_id')
+        follows.unique(['user_following_id', 'user_followed_id'])
     })
 };
 

@@ -32,6 +32,8 @@ class User extends Model {
     // Defining relationships for eager loading
     static get relationMappings() {
         const Post = require('./post')
+        const Like = require('./like')
+
         return {
             posts: {
                 relation: Model.HasManyRelation,
@@ -63,6 +65,18 @@ class User extends Model {
                         to: 'follows.user_followed_id'
                     },
                     to: 'users.id'
+                }
+            },
+            likes: {
+                relation: Model.ManyToManyRelation,
+                modelClass: Post,
+                join: {
+                    from: 'users.id',
+                    through: {
+                        from: 'likes.user_id',
+                        to: 'likes.post_id'
+                    },
+                    to: 'posts.id'
                 }
             }
         }

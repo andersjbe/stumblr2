@@ -31,6 +31,7 @@ class Post extends Model {
     static get relationMappings() {
         const User = require('./user')
         const MediaType = require('./mediaType')
+        const Like = require('./like')
 
         return {
             user: {
@@ -63,6 +64,14 @@ class Post extends Model {
                 join: {
                     from: 'posts.rebloggedFrom',
                     to: 'posts.id'
+                }
+            },
+            likes: {
+                relation: Model.HasManyRelation,
+                modelClass: Like,
+                join: {
+                    from: 'posts.id',
+                    to: 'likes.post_id'
                 }
             }
         }

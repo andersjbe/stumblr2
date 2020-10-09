@@ -47,7 +47,6 @@ router.post('/follow/:userFollowedId',
         const { userFollowedId } = req.params
         try {
             const userToFollow = await User.query().findById(userFollowedId)
-            console.log(userToFollow)
             await user.$relatedQuery('following').relate(userToFollow)
         } catch (e) {
             if (e.name === 'UniqueViolationError') {
