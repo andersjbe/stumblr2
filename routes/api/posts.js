@@ -6,10 +6,8 @@ const multerS3 = require('multer-s3')
 const AWS = require('aws-sdk')
 
 const { Post, User, MediaType } = require('../../db/models')
-// const { awsConfig } = require('../../config')
 const { authenticated } = require('../../authToken')
 
-// AWS.config = new awsConfig()
 AWS.config.region = 'us-west-1'
 const s3 = new AWS.S3()
 
@@ -42,7 +40,6 @@ router.post('/',
             mediaUrl = req.file.location;
         }
 
-        // console.log(mediaType)
         try {
             await Post.query().insert({
                 text: text ? text : '',
