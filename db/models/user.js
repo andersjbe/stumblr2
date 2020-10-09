@@ -85,7 +85,6 @@ class User extends Model {
     async follow(userFollowedId) {
         const userToFollow = await User.query().findById(userFollowedId)
         await this.$relatedQuery('following').relate(userToFollow)
-        console.log(userToFollow)
     }
 
     async unfollow(userFollowedId) {
@@ -104,7 +103,7 @@ class User extends Model {
                 username, hashedPassword
             })
         } catch (e) {
-            console.log(e)
+            throw (e)
         }
         return user;
     }
