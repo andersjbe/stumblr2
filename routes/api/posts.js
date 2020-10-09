@@ -114,9 +114,10 @@ router.post('/:id/like',
     authenticated,
     asyncHandler(async (req, res, next) => {
         const {id} = req.params
+        const post = await Post.query().findById(id)
 
         try {
-            await req.user.$relatedQuery('likes').relate().findById(id)            
+            await req.user.$relatedQuery('likes').relate(post)            
         } catch (e) {
             if (e.name === 'UniqueViolationError') {
                 err = Error('Like already exists')
@@ -125,7 +126,7 @@ router.post('/:id/like',
             }
         }
 
-        res.json({message: `${req.user.id} likes ${id}`})
+        res.json({message: `${req.user.id} likes ${post.id}`})
     })
 )
 
