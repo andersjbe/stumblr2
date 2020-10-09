@@ -57,6 +57,22 @@ router.post('/',
         return res.json({ 'message': 'Post successful!' })
     }));
 
+router.post('/:id/reblog',
+    authenticated,
+    asyncHandler(async (req, res) => {
+        const { id } = req.params
+        const post = await Post.query().findById(id)
+        const reblog = await Post.query().insert({
+            text: post.text,
+            mediaTypeId: post.mediaTypeId,
+            userId: req.user.id,
+            rebloggedFrom: post.id,
+            mediaUrl: post.mediaUrl
+        })
+        await reblog.$relatedQuery('rebloggedPost').relate(post)
+        res.json({'message': 'Post successful'})
+    })
+)
 
 router.get('/',
     authenticated,

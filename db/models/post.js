@@ -62,7 +62,7 @@ class Post extends Model {
                 modelClass: Post,
                 join: {
                     from: 'posts.rebloggedFrom',
-                    to: 'posts.if'
+                    to: 'posts.id'
                 }
             }
         }
