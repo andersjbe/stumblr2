@@ -1,6 +1,7 @@
 const knex = require('../knex')
 const { Model, snakeCaseMappers } = require('objection')
 const bcrypt = require('bcryptjs')
+const { join } = require('../knex')
 
 Model.knex(knex)
 
@@ -30,7 +31,16 @@ class User extends Model {
 
     // Defining relationships for eager loading
     static get relationMappings() {
+        const Post = require('./post')
         return {
+            posts: {
+                relation: Model.HasManyRelation,
+                modelClass: Post,
+                join: {
+                    from: 'users.id',
+                    to: 'posts.user_id'
+                }
+            },
             followers: {
                 relation: Model.ManyToManyRelation,
                 modelClass: User,
