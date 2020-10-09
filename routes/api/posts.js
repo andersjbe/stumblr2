@@ -70,7 +70,7 @@ router.get('/',
             .orderBy('posts.id', "DESC")
             .offset(offset)
             .limit(50)
- 
+
         res.json(posts)
     })
 )
@@ -79,10 +79,10 @@ router.get('/search',
     authenticated,
     asyncHandler(async (req, res) => {
         const offset = req.params.offset ? req.params.offset : 0;
-        const term = req.params.term
+        const { term } = req.query
 
         if (term === '') {
-            res.json({'message': 'term cannot be empty'}).status(403)
+            res.json({ 'message': 'term cannot be empty' }).status(403)
         }
         const posts = await Post.query()
             .where('text', 'like', `%${term}%`)
