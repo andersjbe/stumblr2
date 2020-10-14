@@ -83,7 +83,22 @@ router.get('/:id/posts',
             .orderBy('posts.id', "DESC")
             .offset(offset)
             .limit(50)
-        res.json(posts)
+            .withGraphFetched('[user, mediaType, likes, reblogs, rebloggedPost.user]')
+        res.json(posts.map(post => {
+            return {
+                id: post.id,
+                text: post.text,
+                mediaUrl: post.mediaUrl,
+                user: {
+                    id: post.user.id,
+                    username: post.user.username,
+                    profilePicUrl: post.user.profilePicUrl
+                },
+                likes: post.likes,
+                reblogs: post.reblogs,
+                rebloggedFrom: post.rebloggedPost ? post.rebloggedPost.user.username : null
+            }
+        }))
     })
 )
 

@@ -8,7 +8,7 @@ const apiRoutes = require('./routes/api');
 
 const app = express();
 
-app.use(cors({ origin: true }));
+app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== 'production') app.use(moragn('dev'));

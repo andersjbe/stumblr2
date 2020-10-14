@@ -26,7 +26,7 @@ const FormIcon = ({ icon, text, mediaTypeId }) => {
 	const [open, setOpen] = useState(false);
 	const [textBody, setTextBody] = useState('');
 	const userId = useSelector(state => state.auth.currentUserId);
-	
+
 	let accepts = '';
 	if (mediaTypeId === 2) {
 		accepts = 'image/*';
@@ -40,14 +40,15 @@ const FormIcon = ({ icon, text, mediaTypeId }) => {
 		setOpen(true);
 	};
 
-	const handleClose = () => {
+	const handleClose = e => {
+		e.preventDefault()
 		setOpen(false);
 	};
 
 	return (
 		<span onClick={handleClickOpen}>
-			<IconButton onClick={handleClickOpen}>{icon}</IconButton>
-			<Dialog open={open} onClose={handleClose}>
+			<IconButton onClick={() => setOpen(true)}>{icon}</IconButton>
+			<Dialog open={open} onClose={() => setOpen(false)} disableBackdropClick={true}>
 				<DialogTitle>{text}</DialogTitle>
 				<DialogContent>
 					<form
@@ -73,7 +74,11 @@ const FormIcon = ({ icon, text, mediaTypeId }) => {
 								required={mediaTypeId !== 1 ? true : false}
 							/>
 						)}
-						<Button type='submit'>Post</Button>
+
+						<div>
+							<Button type='submit'>Post</Button>
+							<Button onClick={handleClose} >Cancel</Button>
+						</div>
 					</form>
 				</DialogContent>
 			</Dialog>
@@ -102,7 +107,7 @@ export default () => {
 	const classes = styles();
 
 	return (
-		<Card id='create-post' style={{ maxWidth: '540px', 'marginBottom': '20px'}}>
+		<Card id='create-post' style={{ maxWidth: '540px', 'marginBottom': '20px' }}>
 			<CardContent className={classes.root}>
 				<FormIcon
 					icon={<TextFields style={{ fontSize: '50px' }} />}

@@ -1,12 +1,9 @@
-import { fetchPosts } from './store/posts';
-import { fetchUsers } from './store/users';
-import { fetchFollows } from './store/follows';
 import PostForm from './PostForm';
 import CardPost from './CardPost';
 
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
+import { fetchPosts } from './utils';
 
 const madeStyles = makeStyles({
 	root: {
@@ -20,19 +17,15 @@ const madeStyles = makeStyles({
 });
 
 export default props => {
-	const dispatch = useDispatch();
 	const classes = madeStyles();
+	const [posts, setPosts] = useState([])
 
 	useEffect(() => {
-		dispatch(fetchUsers());
-		dispatch(fetchPosts());
-		dispatch(fetchFollows());
-	}, [dispatch]);
+		fetchPosts('/posts')
+			.then(fetched => setPosts(fetched))
+	}, []);
 
-	const users = useSelector(state => state.users);
-	const posts = useSelector(state =>
-		Object.values(state.posts).sort((a, b) => b.id - a.id)
-	);
+
 	// const follows = useSelector(state => state.follows);
 	// const currentUserId = useSelector(state => state.auth.currentUserId);
 	// const subscribedUsers = Object.keys(users).filter(
@@ -48,7 +41,7 @@ export default props => {
 					classes={classes}
 					key={post.id}
 					post={post}
-					user={users[post.userId]}
+					user={post.userId}
 				/>
 			))}
 		</div>

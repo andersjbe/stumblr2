@@ -46,7 +46,7 @@ class Post extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: MediaType,
                 join: {
-                    from: 'posts.mediaTypeId',
+                    from: 'posts.media_type_id',
                     to: 'media_types.id'
                 }
             },
@@ -55,14 +55,14 @@ class Post extends Model {
                 modelClass: Post,
                 join: {
                     from: 'posts.id',
-                    to: 'posts.rebloggedFrom'
+                    to: 'posts.reblogged_from'
                 }
             },
             rebloggedPost: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Post,
                 join: {
-                    from: 'posts.rebloggedFrom',
+                    from: 'posts.reblogged_from',
                     to: 'posts.id'
                 }
             },
@@ -76,6 +76,8 @@ class Post extends Model {
             }
         }
     }
+
+    
 }
 
 module.exports = Post

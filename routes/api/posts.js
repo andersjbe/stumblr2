@@ -77,14 +77,30 @@ router.get('/',
         const offset = req.params.offset ? req.params.offset : 0;
         const { user } = req
         const { following } = await User.fetchGraph(user, 'following')
-        const followingIds = following.map(follow => follow.id)
+        const followingIds = [...following.map(follow => follow.id), user.id]
         const posts = await Post.query()
             .whereIn('user_id', followingIds)
+            .orWhere('id', user.id)
             .orderBy('posts.id', "DESC")
             .offset(offset)
             .limit(50)
-
-        res.json(posts)
+            .withGraphFetched('[user, mediaType, likes, reblogs, rebloggedPost.user]')
+        res.json(posts.map(post => {
+            return {
+                id: post.id,
+                text: post.text,
+                mediaUrl: post.mediaUrl,
+                user: {
+                    id: post.user.id,
+                    username: post.user.username,
+                    profilePicUrl: post.user.profilePicUrl
+                },
+                likes: post.likes,
+                reblogs: post.reblogs,
+                rebloggedFrom: post.rebloggedPost ? post.rebloggedPost.user.username : null
+            }
+        }))
+        // res.json(posts)
     })
 )
 
@@ -102,19 +118,33 @@ router.get('/search',
             .orderBy('posts.id', "DESC")
             .offset(offset)
             .limit(50)
-
-        res.json(posts)
+            .withGraphFetched('[user, mediaType, likes, reblogs, rebloggedPost.user]')
+        res.json(posts.map(post => {
+            return {
+                id: post.id,
+                text: post.text,
+                mediaUrl: post.mediaUrl,
+                user: {
+                    id: post.user.id,
+                    username: post.user.username,
+                    profilePicUrl: post.user.profilePicUrl
+                },
+                likes: post.likes,
+                reblogs: post.reblogs,
+                rebloggedFrom: post.rebloggedPost ? post.rebloggedPost.user.username : null
+            }
+        }))
     })
 )
 
 router.post('/:id/like',
     authenticated,
     asyncHandler(async (req, res, next) => {
-        const {id} = req.params
+        const { id } = req.params
         const post = await Post.query().findById(id)
 
         try {
-            await req.user.$relatedQuery('likes').relate(post)            
+            await req.user.$relatedQuery('likes').relate(post)
         } catch (e) {
             if (e.name === 'UniqueViolationError') {
                 err = Error('Like already exists')
@@ -123,7 +153,7 @@ router.post('/:id/like',
             }
         }
 
-        res.json({message: `${req.user.id} likes ${post.id}`})
+        res.json({ message: `${req.user.id} likes ${post.id}` })
     })
 )
 
@@ -132,11 +162,11 @@ router.post('/:id/unlike',
     asyncHandler(async (req, res, next) => {
         try {
             await req.user.$relatedQuery('likes').unrelate().findById(req.params.id)
-        } catch(e) {
+        } catch (e) {
             return next(e)
         }
 
-        res.json({message: `${req.user.id} unliked ${req.params.id}`})
+        res.json({ message: `${req.user.id} unliked ${req.params.id}` })
     })
 )
 
