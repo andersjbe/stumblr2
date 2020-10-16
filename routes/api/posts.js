@@ -90,12 +90,13 @@ router.get('/',
                 id: post.id,
                 text: post.text,
                 mediaUrl: post.mediaUrl,
+                mediaType: mediaType.type,
                 user: {
                     id: post.user.id,
                     username: post.user.username,
                     profilePicUrl: post.user.profilePicUrl
                 },
-                likes: post.likes,
+                likes: post.likes.map(like => like.userId),
                 reblogs: post.reblogs,
                 rebloggedFrom: post.rebloggedPost ? post.rebloggedPost.user.username : null
             }

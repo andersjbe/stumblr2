@@ -13,7 +13,14 @@ router.post('/',
         const user = await User.create(username, password)
         const { jti, token } = createToken(user)
 
-        res.json({ token, id: user.id })
+        res.json({
+            token, 
+            user: {
+                id: user.id,
+                username: user.username,
+                profilePicUrl: user.profilePicUrl
+            }
+        })
     })
 )
 
