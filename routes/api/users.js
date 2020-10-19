@@ -37,12 +37,19 @@ router.post('/login',
             const err = new Error('Wrong password');
             err.status = 401;
             err.title = 'Login Failed';
-            err.rorros = ['Invalid Credentials'];
+            err.errors = ['Invalid Credentials'];
             return next(err);
         }
 
         const { jti, token } = createToken(user)
-        res.json({ token, id: user.id })
+        res.json({
+            token, 
+            user: {
+                id: user.id,
+                username: user.username,
+                profilePicUrl: user.profilePicUrl
+            }
+        })
     })
 )
 
@@ -78,6 +85,19 @@ router.post('/unfollow/:userFollowedId',
             return next(e)
         }
         res.json({ message: `${user.id} unfollowed ${userFollowedId}` })
+    })
+)
+
+router.get('/:id',
+    asyncHandler(async (req, res) => {
+        const user = await User.query().findById(req.params.if)
+        res.json({
+            user: {
+                id: user.id,
+                username: user.username,
+                profilePicUrl: user.profilePicUrl
+            }
+        })
     })
 )
 

@@ -90,7 +90,7 @@ router.get('/',
                 id: post.id,
                 text: post.text,
                 mediaUrl: post.mediaUrl,
-                mediaType: mediaType.type,
+                mediaType: post.mediaType.type,
                 user: {
                     id: post.user.id,
                     username: post.user.username,
