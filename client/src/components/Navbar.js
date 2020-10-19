@@ -2,24 +2,65 @@ import { Box, Anchor, Avatar, Button, Header, Heading, Layer, Nav, Sidebar, Text
 import { Close, Github, Home, LinkNext, Menu, Search } from 'grommet-icons'
 import React, { useState } from 'react'
 import MediaQuery from 'react-responsive'
-// import { useSelector } from 'react-redux'
+import { USER_KEY } from '../store/auth'
+import { Redirect } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 export default function Navbar() {
-    // const { auth } = useSelector(state => state)
-    const [sidebar, setSidebar] = useState(false)
+    const { auth } = useSelector(state => state)
+    const [sidebar, setSidebar] = useState()
     const [search, setSearch] = useState(false)
     const [query, setQuery] = useState('')
+    const [focused, setFocused] = useState(false)
+
+    if (!localStorage.getItem(USER_KEY)) {
+        return <Redirect to='/' />
+    }
 
     return (
         <>
             <MediaQuery minWidth={1000}>
-                <Header>
+                <Header justify='between' pad='small' background='brand' fill='horizontal'
+                    style={{position: 'sticky', top:'0'}}
+                >
+                    <Nav direction='row'>
+                        <Heading level={2} alignSelf='center' margin='none' color='#fff'>st</Heading>
+                        <Box
+                            background={
+                                focused ?
+                                    '#fff'
+                                    : '#2b4460'
+                            }
+                            round
+                        >
+                            <TextInput
+                                onFocus={() => setFocused(true)}
+                                onBlur={() => setFocused(false)}
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                size='xlarge'
+                                icon={<Button icon={<Search />} />}
+                            />
+                        </Box>
+                        {
+                            query ?
+                                <Button gap='small' primary reverse label='Go' icon={<LinkNext />} />
+                                : null
+                        }
+                    </Nav>
 
+                    <Nav direction='row'>
+                        <Anchor
+                            icon={<Home />}
+                            color='#fff'
+                        />
+                    </Nav>
                 </Header>
             </MediaQuery>
 
             <MediaQuery maxWidth={999}>
-                <Header background='brand' justify='between' pad='xsmall'>
+                <Header background='brand' justify='between' pad='xsmall' fill='horizontal'
+                    style={{position: 'sticky', top: '0'}}>
                     {
                         sidebar ?
                             <Button
@@ -47,7 +88,7 @@ export default function Navbar() {
                                 </Box>
                                 {
                                     query ?
-                                        <Button gap='small' primary reverse label='Go' icon={<LinkNext  />} />
+                                        <Button gap='small' primary reverse label='Go' icon={<LinkNext />} />
                                         : null
                                 }
                             </Box>
@@ -70,9 +111,8 @@ export default function Navbar() {
                     <Layer
                         onClickOutside={() => setSidebar(false)}
                         full='vertical'
-                        modal={false}
+                        modal={true}
                         position='left'
-
                     >
                         <Sidebar
                             elevation='medium'
@@ -90,8 +130,8 @@ export default function Navbar() {
                                     />
                                     <Avatar
                                         alignSelf='center'
-                                        title="Ben"
-                                        src='https://avatars1.githubusercontent.com/u/62520351?s=460&u=55b9329cab60bcd8ed323f29212e021176a206c1&v=4'
+                                        subtitle={auth.user.username}
+                                        src={auth.profilePicUrl || 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.vCNr3UL_DV6WByU6q5bS9AHaHa%26pid%3DApi&f=1'}
                                     />
                                 </>
                             }

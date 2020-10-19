@@ -13,47 +13,54 @@ export const getHeaders = () => {
     }
 }
 
-export const login = (username, password) => async dispatch => {
+export const login = (formData, setErrors) => async dispatch => {
+	console.log('logging you in...')
 	const res = await fetch(`${imageUrl}/api/users/login`, {
 		method: 'post',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ username, password }),
+		body: JSON.stringify(formData),
 	});
-
 	if (res.ok) {
 		const data = await res.json();
 		window.localStorage.setItem(TOKEN_KEY, data.token);
-		window.localStorage.setItem(USER_KEY, data.userId);
-		dispatch(setToken(data.token, data.userId));
+		window.localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+		dispatch(setToken(data.token, data.user));
 	} else {
 		console.log(res);
+		const err = await res.json()
+		setErrors(err.message)
 	}
 };
 
-export const signup = (username, password) => async dispatch => {
+export const signup = (formData, setErrors) => async dispatch => {
 	const res = await fetch(`${imageUrl}/api/users`, {
 		method: 'post',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ username, password }),
+		body: JSON.stringify(formData),
 	});
 
 	if (res.ok) {
 		const data = await res.json();
 		window.localStorage.setItem(TOKEN_KEY, data.token);
-		window.localStorage.setItem(USER_KEY, data.userId);
-		dispatch(setToken(data.token, data.userId));
+		window.localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+		dispatch(setToken(data.token, data.user));
+	} else {
+		console.log(res);
+		const err = await res.json()
+		setErrors(err.message)
 	}
 };
 
-export const setToken = (token, currentUserId) => {
+export const setToken = (token, user) => {
 	return {
 		type: SET_TOKEN,
 		token,
-		currentUserId,
+		user,
 	};
 };
 
 export const logOut = () => {
+	localStorage.removeItem(USER_KEY)
 	return { type: REMOVE_TOKEN }
 };
 
@@ -63,14 +70,14 @@ export default function reducer(state = {}, action) {
 			return {
 				...state,
 				token: action.token,
-				currentUserId: action.currentUserId,
+				user: action.user,
 			};
 
 		case REMOVE_TOKEN:
 			return {
 				...state,
 				token: null,
-				currentUserId: null,
+				user: null,
 			};
 
 		default:

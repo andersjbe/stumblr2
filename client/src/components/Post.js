@@ -58,6 +58,8 @@ export default function Post({ post }) {
             background='#fff'
             width='540px'
             elevation='none'
+            margin='small'
+            flex={false}
         >
             <CardHeader pad='xsmall'>
                 <Box
@@ -96,7 +98,7 @@ export default function Post({ post }) {
             <CardBody>
                 {
                     mediaType !== 'text' ?
-                        <Box fill='horizontal'>
+                        <Box flex={false}>
                             {
                                 mediaType === 'image' ?
                                     <Image
