@@ -23,7 +23,7 @@ class Post extends Model {
                 text: { type: 'string' },
                 mediaTypeId: { type: 'integer' },
                 mediaUrl: { type: 'string' },
-                rebloggedFrom: { type: ['integer', null] }
+                rebloggedFrom: { type: 'integer' }
             }
         }
     }

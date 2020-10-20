@@ -5,7 +5,7 @@ export const TOKEN_KEY = 'stumblr/auth/TOKEN_KEY';
 export const USER_KEY = 'stumblr/auth/USER_KEY';
 const REMOVE_TOKEN = 'stumblr/auth/REMOVE_TOKEN';
 
-export const getHeaders = () => {
+export const getHeaders = (formData) => {
     const token = localStorage.getItem(TOKEN_KEY)
     return {
         'Authorization': `Bearer ${token}`,
@@ -14,7 +14,6 @@ export const getHeaders = () => {
 }
 
 export const login = (formData, setErrors) => async dispatch => {
-	console.log('logging you in...')
 	const res = await fetch(`${imageUrl}/api/users/login`, {
 		method: 'post',
 		headers: { 'Content-Type': 'application/json' },

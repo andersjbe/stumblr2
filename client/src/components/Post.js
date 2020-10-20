@@ -68,7 +68,7 @@ export default function Post({ post }) {
                     gap='xsmall'
                 >
                     <Avatar
-                        src={user.profilePicUrl}
+                        src={user.profilePicUrl || 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.vCNr3UL_DV6WByU6q5bS9AHaHa%26pid%3DApi&f=1'}
                         gridArea='avatar'
                     />
                     <Box alignSelf='center'>
@@ -117,6 +117,7 @@ export default function Post({ post }) {
                             } {
                                 mediaType === 'audio' ?
                                     <audio
+                                        style={{ alignSelf: 'center', width: '500px' }}
                                         src={mediaUrl}
                                         controls
                                     />
@@ -125,7 +126,7 @@ export default function Post({ post }) {
                         </Box>
                         : null
                 }
-                <Box fill='horizontal' textAlign='start' pad='xsmall'>
+                <Box margin='small' fill='horizontal' textAlign='start' pad='xsmall'>
                     <Paragraph textAlign='start'>{text}</Paragraph>
                 </Box>
             </CardBody>
@@ -147,7 +148,7 @@ export default function Post({ post }) {
                             label={numLikes}
                         />
                         : <Button
-                        margin='none'
+                            margin='none'
                             primary
                             color='#fff'
                             icon={<Favorite />}

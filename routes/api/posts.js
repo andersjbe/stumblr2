@@ -27,11 +27,10 @@ router.post('/',
     authenticated,
     upload.single('file'),
     asyncHandler(async (req, res, next) => {
-        let { text, mediaTypeId, rebloggedFrom } = req.body;
+        let { text, mediaTypeName, rebloggedFrom } = req.body;
         const userId = req.user.id
-
         let mediaUrl = '';
-        const mediaType = await MediaType.query().findById(Number(mediaTypeId))
+        const [mediaType] = await MediaType.query().where('type', mediaTypeName)
         if (
             mediaType.type === 'image' ||
             mediaType.type === 'video' ||
@@ -41,11 +40,11 @@ router.post('/',
         }
 
         try {
+            console.log(rebloggedFrom)
             await Post.query().insert({
                 text: text ? text : '',
-                mediaTypeId: Number(mediaTypeId),
+                mediaTypeId: mediaType.id,
                 userId: Number(userId),
-                rebloggedFrom,
                 mediaUrl
             })
         } catch (e) {
