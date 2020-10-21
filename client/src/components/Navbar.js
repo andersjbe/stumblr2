@@ -1,9 +1,9 @@
 import { Box, Anchor, Avatar, Button, Header, Heading, Layer, Nav, Sidebar, TextInput } from 'grommet'
-import { Close, Github, Home, LinkNext, Menu, Search } from 'grommet-icons'
+import { Close, Favorite, Github, Home, LinkNext, Menu, Search } from 'grommet-icons'
 import React, { useState } from 'react'
 import MediaQuery from 'react-responsive'
 import { USER_KEY } from '../store/auth'
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 export default function Navbar() {
@@ -21,7 +21,7 @@ export default function Navbar() {
         <>
             <MediaQuery minWidth={1000}>
                 <Header justify='between' pad='small' background='brand' fill='horizontal'
-                    style={{position: 'sticky', top:'0'}}
+                    style={{ position: 'sticky', top: '0' }}
                 >
                     <Nav direction='row'>
                         <Heading level={2} alignSelf='center' margin='none' color='#fff'>st</Heading>
@@ -60,7 +60,7 @@ export default function Navbar() {
 
             <MediaQuery maxWidth={999}>
                 <Header background='brand' justify='between' pad='xsmall' fill='horizontal'
-                    style={{position: 'sticky', top: '0'}}>
+                    style={{ position: 'sticky', top: '0' }}>
                     {
                         sidebar ?
                             <Button
@@ -144,11 +144,23 @@ export default function Navbar() {
                             }
                         >
                             <Nav direction='column'>
-                                <Anchor
-                                    label='Dashboard'
-                                    icon={<Home />}
-                                    color='#fff'
-                                />
+                                <Link to='/dashboard'>
+                                    <Button
+                                        label='Dashboard'
+                                        icon={<Home />}
+                                        color='brand'
+                                        onClick={() => setSidebar(false)}
+                                    />
+                                </Link>
+
+                                <Link to='/likes'>
+                                    <Button
+                                        label='Likes'
+                                        icon={<Favorite />}
+                                        color='brand'
+                                        onClick={() => setSidebar(false)}
+                                    />
+                                </Link>
                             </Nav>
                         </Sidebar>
                     </Layer>

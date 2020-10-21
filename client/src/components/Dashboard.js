@@ -6,10 +6,9 @@ import Navbar from './Navbar'
 
 export default function () {
     return (
-            <Main>
-                <Navbar />
+            <>
                 <CreatePost />
                 <Feed action='/posts' />
-            </Main>
+            </>
     )
 }

@@ -5,52 +5,59 @@ import { apiUrl } from '../config'
 import { Favorite, Update } from 'grommet-icons'
 
 export default function Post({ post }) {
-    const userId = localStorage.getItem(USER_KEY)
+    const usr = JSON.parse(localStorage.getItem(USER_KEY))
     const { id, text, user, mediaType, mediaUrl, likes, reblogs, rebloggedFrom } = post
 
-    const [isLiked, setIsLiked] = useState(likes.includes(userId))
+    const [isLiked, setIsLiked] = useState(likes.includes(usr.id))
     const [numLikes, setNumLikes] = useState(likes.length)
     const [numReblogs, setNumReblogs] = useState(reblogs.length)
 
     const likePost = () => {
+        console.log(likes[0], usr)
         const token = localStorage.getItem(TOKEN_KEY)
-            (async () => {
-                const res = await fetch(`${apiUrl}/posts/${id}/like`, {
-                    headers: getHeaders()
-                })
+        const like = async () => {
+            const res = await fetch(`${apiUrl}/posts/${id}/like`, {
+                method: 'POST',
+                headers: getHeaders()
+            })
 
-                if (res.ok) {
-                    setIsLiked(true)
-                    setNumLikes(numLikes + 1)
-                }
-            })()
+            if (res.ok) {
+                setIsLiked(true)
+                setNumLikes(numLikes + 1)
+            }
+        }
+        like()
     }
 
     const unlikePost = () => {
         const token = localStorage.getItem(TOKEN_KEY)
-            (async () => {
-                const res = await fetch(`${apiUrl}/posts/${id}/unlike`, {
-                    headers: getHeaders()
-                })
+        const unlike = async () => {
+            const res = await fetch(`${apiUrl}/posts/${id}/unlike`, {
+                headers: getHeaders(),
+                method: 'POST'
+            })
 
-                if (res.ok) {
-                    setIsLiked(false)
-                    setNumLikes(numLikes - 1)
-                }
-            })()
+            if (res.ok) {
+                setIsLiked(false)
+                setNumLikes(numLikes - 1)
+            }
+        }
+        unlike()
     }
 
     const reblogPost = () => {
         const token = localStorage.getItem(TOKEN_KEY)
-            (async () => {
-                const res = await fetch(`${apiUrl}/posts/${id}/reblog`, {
-                    headers: getHeaders()
-                })
+        const reblog = async () => {
+            const res = await fetch(`${apiUrl}/posts/${id}/reblog`, {
+                headers: getHeaders(),
+                method: 'POST'
+            })
 
-                if (res.ok) {
-                    setNumReblogs(numReblogs + 1)
-                }
-            })()
+            if (res.ok) {
+                setNumReblogs(numReblogs + 1)
+            }
+        }
+        reblog()
     }
 
     return (
@@ -138,14 +145,16 @@ export default function Post({ post }) {
                     color='#fff'
                     icon={<Update />}
                     label={numReblogs}
+                    onClick={reblogPost}
                 />
                 {
                     isLiked ?
                         <Button
                             primary
-                            color='#df212a'
-                            icon={<Favorite />}
+                            color='#fff'
+                            icon={<Favorite color='#df212a' />}
                             label={numLikes}
+                            onClick={unlikePost}
                         />
                         : <Button
                             margin='none'
@@ -153,6 +162,7 @@ export default function Post({ post }) {
                             color='#fff'
                             icon={<Favorite />}
                             label={numLikes}
+                            onClick={likePost}
                         />
                 }
             </CardFooter>
