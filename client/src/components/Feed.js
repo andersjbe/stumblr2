@@ -31,7 +31,7 @@ export default function Feed({ action }) {
                 setPosts([])
             }
         })()
-    }, [])
+    }, [action])
 
     const loadMore = () => {
         if (!hasMore) return

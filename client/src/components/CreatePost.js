@@ -2,7 +2,7 @@ import { Box, Button, Image, Card, Footer, Form, FormField, Layer, Text, TextAre
 import { Edit, Image as Img, Music, Video as Vid } from 'grommet-icons'
 import React, { useEffect, useState } from 'react'
 import { apiUrl } from '../config'
-import { getHeaders, TOKEN_KEY } from '../store/auth'
+import {  TOKEN_KEY } from '../store/auth'
 
 export default function CreatePost() {
     const [form, setForm] = useState({ text: '' })

@@ -21,7 +21,7 @@ export default function Navbar() {
         <>
             <MediaQuery minWidth={1000}>
                 <Header justify='between' pad='small' background='brand' fill='horizontal'
-                    style={{ position: 'sticky', top: '0' }}
+                    style={{ position: 'sticky', top: '0', zIndex: '2', borderBottom: '1px solid #2b4460' }}
                 >
                     <Nav direction='row'>
                         <Heading level={2} alignSelf='center' margin='none' color='#fff'>st</Heading>
@@ -50,17 +50,26 @@ export default function Navbar() {
                     </Nav>
 
                     <Nav direction='row'>
-                        <Anchor
-                            icon={<Home />}
-                            color='#fff'
-                        />
+                        <Link to='/dashboard'>
+                            <Button
+                                icon={<Home />}
+                                color='brand'
+                            />
+                        </Link>
+
+                        <Link to='/likes'>
+                            <Button
+                                icon={<Favorite />}
+                                color='brand'
+                            />
+                        </Link>
                     </Nav>
                 </Header>
             </MediaQuery>
 
             <MediaQuery maxWidth={999}>
                 <Header background='brand' justify='between' pad='xsmall' fill='horizontal'
-                    style={{ position: 'sticky', top: '0' }}>
+                    style={{ zIndex: '2', position: 'sticky', top: '0', borderBottom: '1px solid #2b4460' }}>
                     {
                         sidebar ?
                             <Button
@@ -92,9 +101,9 @@ export default function Navbar() {
                                         : null
                                 }
                             </Box>
-                            : <a>
+                            : <Link to='/dashboard'>
                                 <Heading level={2} margin='none' color='#fff'>st</Heading>
-                            </a>
+                            </Link>
                     }
 
                     {

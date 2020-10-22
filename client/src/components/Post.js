@@ -1,6 +1,6 @@
-import { Box, Paragraph, Card, CardBody, CardFooter, CardHeader, Grid, Avatar, Image, Video, Button, Heading, Anchor } from 'grommet'
+import { Box, Paragraph, Card, CardBody, CardFooter, CardHeader, Avatar, Image, Video, Button, Heading, Anchor } from 'grommet'
 import React, { useState } from 'react'
-import { USER_KEY, TOKEN_KEY, getHeaders } from '../store/auth'
+import { USER_KEY, getHeaders } from '../store/auth'
 import { apiUrl } from '../config'
 import { Favorite, Update } from 'grommet-icons'
 
@@ -13,8 +13,6 @@ export default function Post({ post }) {
     const [numReblogs, setNumReblogs] = useState(reblogs.length)
 
     const likePost = () => {
-        console.log(likes[0], usr)
-        const token = localStorage.getItem(TOKEN_KEY)
         const like = async () => {
             const res = await fetch(`${apiUrl}/posts/${id}/like`, {
                 method: 'POST',
@@ -30,7 +28,6 @@ export default function Post({ post }) {
     }
 
     const unlikePost = () => {
-        const token = localStorage.getItem(TOKEN_KEY)
         const unlike = async () => {
             const res = await fetch(`${apiUrl}/posts/${id}/unlike`, {
                 headers: getHeaders(),
@@ -46,7 +43,6 @@ export default function Post({ post }) {
     }
 
     const reblogPost = () => {
-        const token = localStorage.getItem(TOKEN_KEY)
         const reblog = async () => {
             const res = await fetch(`${apiUrl}/posts/${id}/reblog`, {
                 headers: getHeaders(),
@@ -124,7 +120,7 @@ export default function Post({ post }) {
                             } {
                                 mediaType === 'audio' ?
                                     <audio
-                                        style={{ alignSelf: 'center', width: '500px' }}
+                                        style={{ alignSelf: 'center', width: '500px', zIndex: 1 }}
                                         src={mediaUrl}
                                         controls
                                     />

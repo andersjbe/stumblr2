@@ -4,12 +4,11 @@ import Landing from './components/Landing';
 import { Route, Switch } from 'react-router-dom';
 import PageLayout from './components/PageLayout';
 import Feed from './components/Feed';
-import LikePage from './components/LikePage';
-import { USER_KEY } from './store/auth';
+// import { USER_KEY } from './store/auth';
 import Dashboard from './components/Dashboard';
 
 function App() {
-  const user = JSON.parse(localStorage.getItem(USER_KEY))
+  // const user = JSON.parse(localStorage.getItem(USER_KEY))
 
   return (
     <Switch>

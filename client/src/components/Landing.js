@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { PasswordInput } from 'grommet-controls'
 import { login, signup, USER_KEY } from '../store/auth'
 import { Redirect, useHistory } from 'react-router-dom'
-import { apiUrl } from '../config'
 
 export default function Landing() {
     const [formData, setFormData] = useState({})

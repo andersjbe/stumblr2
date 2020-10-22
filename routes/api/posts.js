@@ -140,8 +140,8 @@ router.post('/:id/like',
     authenticated,
     asyncHandler(async (req, res, next) => {
         const { id } = req.params
-        const post = await Post.query().findById(id)
-
+        const post = await Post.query().findById(Number(id))
+        console.log(req.user)
         try {
             await req.user.$relatedQuery('likes').relate(post)
         } catch (e) {
@@ -176,21 +176,33 @@ router.get('/liked',
         const offset = req.query.offset ? req.query.offset : 0;
 
         const likes = await Like.query()
-            .select('post_id')
-            .where('user_id', user.id)
             .orderBy('id', 'DESC')
+            .where('user_id', user.id)
             .offset(offset)
             .limit(50)
 
-        const posts = await Post.query()
-            .findByIds(likes.map(like => like.postId))
-            .withGraphFetched('[user, mediaType, likes, reblogs, rebloggedPost.user]')
+        // console.log(likes)
+        // const posts = await Post.query()
+        //     .findByIds(likes.map(like => like.postId))
+        //     .withGraphFetched('[user, mediaType, likes, reblogs, rebloggedPost.user]')
+        //     .orderBy('id', 'DESC')
+        const posts = []
+        for (let i = 0; i < likes.length; i++) {
+            let like = likes[i]
+            const post = await Post.query()
+                .findById(like.postId)
+                .withGraphFetched('[user, mediaType, likes, reblogs, rebloggedPost.user]')
+            posts.push(post)
+        }
+
+        console.log(posts)
 
         res.json(posts.map(post => {
             return {
                 id: post.id,
                 text: post.text,
                 mediaUrl: post.mediaUrl,
+                mediaType: post.mediaType.type,
                 user: {
                     id: post.user.id,
                     username: post.user.username,
